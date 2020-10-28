@@ -17,7 +17,6 @@ options.makeTest();
 
 const {border, bg} = options.colors;
 
-
 console.log(Object.keys(options).length);
 
 
@@ -37,8 +36,6 @@ console.log(counter);
 
 
 const arr = [1, 2, 3, 6, 8];
-
-
 
  for (let value of arr) {
      console.log(value);
