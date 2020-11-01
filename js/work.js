@@ -30,3 +30,6 @@ wrapper.append(div);
 div.innerHTML = '<h1>Hello</h1>';
 
 div.insertAdjacentHTML('beforeend', '<h1>WORLD</h1>')
+
+
+let arr_EN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
