@@ -32,4 +32,29 @@ div.innerHTML = '<h1>Hello</h1>';
 div.insertAdjacentHTML('beforeend', '<h1>WORLD</h1>')
 
 
-let arr_EN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+
+
+function rot13(str) {
+let strNew = [];
+let arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+for(let i=0; i < str.length; i++) {
+    if(str[i] == " "|str[i] == "!"|str[i] == "?"|str[i] == ".") {
+        strNew.push(str[i]);
+    } else {
+        for(let j=0; j < arr.length; j++) {
+            if(arr[j] == str[i] && j >= 13) {
+            strNew.push(arr[j - 13]);   
+            } else if (arr[j] == str[i]) {
+                strNew.push(arr[j + 13]);    
+            }
+        }
+        
+    }
+}
+
+    return strNew.join('');
+  }
+  
+  console.log(rot13("SERR CVMMN!"));
+  
