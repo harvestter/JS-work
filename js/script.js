@@ -1,102 +1,117 @@
-"use strict";
+/* Задания на урок1:
+1) Удалить все рекламные блоки со страницы (правая часть сайта)
+2) Изменить жанр фильма, поменять "комедия" на "драма"
+3) Изменить задний фон постера с фильмом на изображение "bg.jpg". Оно лежит в папке img.
+Реализовать только при помощи JS
+4) Список фильмов на странице сформировать на основании данных из этого JS файла.
+Отсортировать их по алфавиту 
+5) Добавить нумерацию выведенных фильмов */
 
-/*
-//Вопросы пользователю и запись их в пустые объекты
-const numberOfFilms = +prompt('How many movies do you watch?', '');
+/* Задания на урок2:
+1) Реализовать функционал, что после заполнения формы и нажатия кнопки "Подтвердить" - 
+новый фильм добавляется в список. Страница не должна перезагружаться.
+Новый фильм должен добавляться в movieDB.movies.
+Для получения доступа к значению input - обращаемся к нему как input.value;
+P.S. Здесь есть несколько вариантов решения задачи, принимается любой, но рабочий.
+2) Если название фильма больше, чем 21 символ - обрезать его и добавить три точки
+3) При клике на мусорную корзину - элемент будет удаляться из списка (сложно)
+4)Если в форме стоит галочка "Сделать любимым" - в консоль вывести сообщение: 
+"Добавляем любимый фильм"
+5) Фильмы должны быть отсортированы по алфавиту */
 
-const personalMovieDB = {
-    count: numberOfFilms,
-    movies: {},
-    actors: {},
-    genres: [],
-    privat: false
-};
+'use strict';
 
-const a = prompt('one of the last viewed movies', ''),
-      b = prompt('how much do you rate it for', ''),
-      c = prompt('one of the last viewed movies', ''),
-      d = prompt('how much do you rate it for', '');
-
-personalMovieDB.movies[a] = b; //Добавление свойств в пустой объект
-personalMovieDB.movies[c] = d;
-console.log(personalMovieDB);*/
-
-
-
-
-const personalMovieDB = {
-    count: 0,
-    movies: {},
-    actors: {},
-    genres: [],
-    privat: false,
-
-    start: function() {
-        personalMovieDB.count = +prompt('How many movies do you watch?', '');
+document.addEventListener('DOMContentLoaded', () => {
+    const movieDB = {
+        movies: [
+            "Логан",
+            "Лига справедливости",
+            "Ла-ла лэнд",
+            "Одержимость",
+            "Скотт Пилигрим против..."
+        ]
+    };
     
-        while (personalMovieDB.count =='' || personalMovieDB.count == null || isNaN(personalMovieDB.count)) {
-            personalMovieDB.count = +prompt('How many movies do you watch?', '');
-        }
-    },
+    const adv = document.querySelectorAll('.promo__adv img'),
+          poster = document.querySelector('.promo__bg'),
+          genre = poster.querySelector('.promo__genre'),
+          movieList = document.querySelector('.promo__interactive-list'),
+          addForm = document.querySelector('form.add'),
+          addInput = addForm.querySelector('.adding__input'),
+          checkbox = addForm.querySelector('[type="checkbox"]');
 
-    rememberMyFilms: function() {
-        for (let i = 0; i < 2; i++) {
     
-            let a = prompt('one of the last viewed movies', ''),
-                b = prompt('how much do you rate it for', '');
-            
-            if ( a != null && b != null && a != '' && b != "" && a.length < 50 ) {
-                personalMovieDB.movies[a] = b;
-                console.log('done');
-            } else {
-                console.log("error");
-                i--;
-            }      
-        }
-    },
+    const deleteAdv = (arr) => {
+        arr.forEach(element => {
+            element.remove();
+        });
+    };
 
-    detectPersonalLevel: function() {
-        if (personalMovieDB.count < 10) {
-            console.log('viewed a few movies');
-        } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
-            console.log('you are a classic viewer');
-        } else if (personalMovieDB.count >= 30) {
-            console.log('are you a movie fan');
-        } else {
-            console.log('misstake');
-        }
-    },
 
-    showMyDB: function(hidden) {
-        if (!hidden) {
-            console.log(personalMovieDB);
-        }
-    },
+    const makeChanges = () => {
+        genre.textContent = 'драма';
+        poster.style.backgroundImage = "url('img/bg.jpg')";
+    };
 
-    toggleVisibleMyDB: function() {
-        if (personalMovieDB.privat) {
-            personalMovieDB.privat = fa;
-        } else {
-            personalMovieDB.privat = true;
-        }    
-    },
 
-    writeYourGenres: function() {
-        for (let i = 1; i <= 3; i++) {
-            let genre = prompt(`your favorite genre under the number ${i}`);
+    const sortArr = (arr) => {
+        arr.sort();
+    };
 
-            if(genre === '' || genre == null) {
-                console.log('Вы ввели некоректные данные');
-                i--;
-            } else {
-                personalMovieDB.genres[i - 1] = genre;
-            }
-        }
 
-        personalMovieDB.genres.forEach((item, i) => {
-            console.log(`Любимый жанр ${i + 1} -это ${item}`)
+    function createMovieList(films, parent) {
+        parent.innerHTML = "";
+        sortArr(films); // сортировка списка 
+
+        films.forEach((film, i) => {
+            parent.innerHTML += `
+                <li class="promo__interactive-item">${i + 1} ${film}
+                    <div class="delete"></div>
+                </li>
+            `;
+        });
+
+        document.querySelectorAll('.delete').forEach((btn, i) =>{ //удаление элементов из списка
+            btn.addEventListener('click', () => {
+                btn.parentElement.remove();
+                movieDB.movies.splice(i, 1);
+
+                createMovieList(films, parent); //Рекурсия! для того чтобы при удалении эл. менялась нумерация
+            });
         });
     }
-     
-};
 
+
+    addForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        let newFilm = addInput.value;
+        const favorite = checkbox.checked;
+
+        if(newFilm) {
+
+            if(newFilm.length > 21) {
+                newFilm = `${newFilm.substring(0, 22)}...`;
+            }
+
+            if (favorite) {
+                console.log("Добавляем любимый фильм");
+            }
+
+            movieDB.movies.push(newFilm);
+            sortArr(movieDB.movies);
+
+            createMovieList(movieDB.movies, movieList);
+        }
+
+        event.target.reset();
+
+    });
+
+    
+    deleteAdv(adv);
+    makeChanges();
+    createMovieList(movieDB.movies, movieList);
+
+
+});
