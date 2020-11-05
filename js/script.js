@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
           checkbox = addForm.querySelector('[type="checkbox"]');
 
     
-    const deleteAdv = (arr) => {
+    const deleteAdv = (arr) => { //Удаляем рекламу
         arr.forEach(element => {
             element.remove();
         });
@@ -71,10 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         });
 
-        document.querySelectorAll('.delete').forEach((btn, i) =>{ //удаление элементов из списка
+        document.querySelectorAll('.delete').forEach((btn, i) =>{ //удаление элементов из списка при нажатии кнопки корзина
             btn.addEventListener('click', () => {
                 btn.parentElement.remove();
-                movieDB.movies.splice(i, 1);
+                films.splice(i, 1);
 
                 createMovieList(films, parent); //Рекурсия! для того чтобы при удалении эл. менялась нумерация
             });
@@ -82,26 +82,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    addForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+    addForm.addEventListener('submit', (event) => { //добавление нового фильма при вводе в инпут
+        event.preventDefault();    //отмена стандартного поведения браузера
 
         let newFilm = addInput.value;
-        const favorite = checkbox.checked;
+        const favorite = checkbox.checked; //чекбокс любимый фильм
 
         if(newFilm) {
 
             if(newFilm.length > 21) {
-                newFilm = `${newFilm.substring(0, 22)}...`;
+                newFilm = `${newFilm.substring(0, 22)}...`; //если название введенного фильма больше 21 то ....
             }
 
             if (favorite) {
-                console.log("Добавляем любимый фильм");
+                console.log("Добавляем любимый фильм"); //проверка если фильм любимый
             }
 
-            movieDB.movies.push(newFilm);
+            movieDB.movies.push(newFilm); 
             sortArr(movieDB.movies);
 
-            createMovieList(movieDB.movies, movieList);
+            createMovieList(movieDB.movies, movieList); //вызов функции создания списка
         }
 
         event.target.reset();
